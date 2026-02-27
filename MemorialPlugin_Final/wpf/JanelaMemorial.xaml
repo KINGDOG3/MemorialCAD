@@ -1,0 +1,321 @@
+<Window x:Class="MemorialPlugin.WPF.JanelaMemorial"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Memorial Descritivo — Plugin Civil 3D v2.0"
+        Width="1100" Height="780" MinWidth="900" MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5"
+        FontFamily="Segoe UI" FontSize="13">
+
+    <Window.Resources>
+        <!-- Estilo de botão principal -->
+        <Style x:Key="BtnPrincipal" TargetType="Button">
+            <Setter Property="Background" Value="#1565C0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="14,6"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1976D2"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#0D47A1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Estilo de botão secundário -->
+        <Style x:Key="BtnSecundario" TargetType="Button">
+            <Setter Property="Background" Value="#ECEFF1"/>
+            <Setter Property="Foreground" Value="#37474F"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#B0BEC5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#CFD8DC"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Estilo de campo de texto -->
+        <Style TargetType="TextBox">
+            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="BorderBrush" Value="#B0BEC5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <!-- Estilo de label de campo -->
+        <Style x:Key="LblCampo" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#546E7A"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Margin" Value="0,6,0,2"/>
+        </Style>
+
+        <!-- Cabeçalho de seção -->
+        <Style x:Key="SecaoHeader" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#1565C0"/>
+            <Setter Property="Margin" Value="0,12,0,6"/>
+        </Style>
+    </Window.Resources>
+
+    <DockPanel>
+        <!-- ═══ BARRA SUPERIOR ══════════════════════════════════════ -->
+        <Border DockPanel.Dock="Top" Background="#1565C0" Padding="16,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="MEMORIAL DESCRITIVO" FontSize="18" FontWeight="Bold"
+                               Foreground="White"/>
+                    <TextBlock Text="Plugin AutoCAD Civil 3D 2024" FontSize="11"
+                               Foreground="#BBDEFB"/>
+                </StackPanel>
+                <Button Grid.Column="1" Content="✕ Fechar" Style="{StaticResource BtnSecundario}"
+                        Click="BtnFechar_Click" VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+
+        <!-- ═══ BARRA DE STATUS ═════════════════════════════════════ -->
+        <Border DockPanel.Dock="Bottom" Background="#263238" Padding="12,6">
+            <TextBlock x:Name="StatusText" Foreground="#B2EBF2" FontSize="11"
+                       Text="Aguardando seleção..." TextWrapping="Wrap"/>
+        </Border>
+
+        <!-- ═══ CONTEÚDO PRINCIPAL ══════════════════════════════════ -->
+        <Grid Margin="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="220"/>   <!-- Lista de lotes -->
+                <ColumnDefinition Width="8"/>     <!-- Espaço -->
+                <ColumnDefinition Width="*"/>     <!-- Painel detalhe + exportar -->
+            </Grid.ColumnDefinitions>
+
+            <!-- ── COLUNA ESQUERDA: Lista de Lotes ──────────────── -->
+            <Border Grid.Column="0" Background="White" BorderBrush="#CFD8DC"
+                    BorderThickness="1" CornerRadius="4">
+                <DockPanel>
+                    <Border DockPanel.Dock="Top" Background="#ECEFF1"
+                            BorderBrush="#CFD8DC" BorderThickness="0,0,0,1" Padding="10,8">
+                        <TextBlock Text="Lotes Selecionados" FontWeight="SemiBold"
+                                   Foreground="#37474F"/>
+                    </Border>
+                    <ListBox x:Name="ListaLotes"
+                             SelectionChanged="ListaLotes_SelectionChanged"
+                             BorderThickness="0" Background="Transparent">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="4,6">
+                                    <TextBlock Text="{Binding NomeLote}"
+                                               FontWeight="SemiBold" FontSize="13"/>
+                                    <TextBlock Text="{Binding Quadra}"
+                                               Foreground="#78909C" FontSize="11"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </Border>
+
+            <!-- ── COLUNA DIREITA: Detalhe + Exportar ──────────── -->
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>       <!-- Detalhe rolável -->
+                    <RowDefinition Height="Auto"/>    <!-- Painel exportar -->
+                </Grid.RowDefinitions>
+
+                <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+                    <StackPanel x:Name="PainelDetalhe" Margin="4,0">
+
+                        <!-- ───── Seção 1: Cabeçalho do Documento ─── -->
+                        <Border Background="White" BorderBrush="#CFD8DC"
+                                BorderThickness="1" CornerRadius="4" Padding="14" Margin="0,0,0,8">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource SecaoHeader}"
+                                           Text="① Dados do Documento (preenchido uma vez)"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/>
+                                    </Grid.RowDefinitions>
+
+                                    <StackPanel Grid.Row="0" Grid.Column="0">
+                                        <TextBlock Text="Nome do Loteamento" Style="{StaticResource LblCampo}"/>
+                                        <TextBox x:Name="TxtNomeLoteamento"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="0" Grid.Column="2">
+                                        <TextBlock Text="Matrícula n°" Style="{StaticResource LblCampo}"/>
+                                        <TextBox x:Name="TxtMatricula"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+                                        <TextBlock Text="Proprietário" Style="{StaticResource LblCampo}"/>
+                                        <TextBox x:Name="TxtProprietario"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="2" Grid.Column="0">
+                                        <TextBlock Text="Responsável Técnico" Style="{StaticResource LblCampo}"/>
+                                        <TextBox x:Name="TxtRespTecnico"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="2" Grid.Column="2">
+                                        <TextBlock Text="CREA n°" Style="{StaticResource LblCampo}"/>
+                                        <TextBox x:Name="TxtCrea"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="3" Grid.Column="0">
+                                        <TextBlock Text="Município" Style="{StaticResource LblCampo}"/>
+                                        <TextBox x:Name="TxtMunicipio"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="3" Grid.Column="2">
+                                        <TextBlock Text="Estado (sigla)" Style="{StaticResource LblCampo}"/>
+                                        <TextBox x:Name="TxtEstado" MaxLength="2"/>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- ───── Seção 2: Detalhes do Lote Selecionado ─── -->
+                        <Border Background="White" BorderBrush="#CFD8DC"
+                                BorderThickness="1" CornerRadius="4" Padding="14">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource SecaoHeader}"
+                                           Text="② Revisão de Confrontações e Azimutes"/>
+
+                                <!-- Info do lote -->
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Lote: " FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding NomeLote}"/>
+                                    <TextBlock Grid.Column="2" Text="  Quadra: " FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Column="3" Text="{Binding Quadra}"/>
+                                </Grid>
+
+                                <!-- Seleção da Frente -->
+                                <TextBlock Text="Definir qual lado é a FRENTE:" Style="{StaticResource LblCampo}"/>
+                                <ComboBox x:Name="ComboFrente"
+                                          ItemsSource="{Binding OpcoesFrente}"
+                                          SelectedIndex="{Binding IndexFrente}"
+                                          SelectionChanged="ComboFrente_SelectionChanged"
+                                          Margin="0,0,0,10" Padding="6,4"/>
+
+                                <!-- Tabela de lados -->
+                                <DataGrid x:Name="ListaLados"
+                                          ItemsSource="{Binding LadasVM}"
+                                          AutoGenerateColumns="False"
+                                          CanUserAddRows="False"
+                                          GridLinesVisibility="Horizontal"
+                                          HeadersVisibility="Column"
+                                          Background="Transparent"
+                                          BorderThickness="1"
+                                          BorderBrush="#CFD8DC"
+                                          RowBackground="White"
+                                          AlternatingRowBackground="#F8F9FA">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Face"
+                                            Binding="{Binding Classificacao}"
+                                            Width="80" IsReadOnly="True"/>
+                                        <DataGridTextColumn Header="Vértices"
+                                            Binding="{Binding Vertice}"
+                                            Width="80" IsReadOnly="True"/>
+                                        <DataGridTextColumn Header="Comprimento"
+                                            Binding="{Binding Comprimento}"
+                                            Width="110" IsReadOnly="True"/>
+                                        <DataGridTextColumn Header="Azimute"
+                                            Binding="{Binding Azimute}"
+                                            Width="120" IsReadOnly="True"/>
+                                        <DataGridTextColumn Header="Confrontante (editável)"
+                                            Binding="{Binding Confrontante, UpdateSourceTrigger=PropertyChanged}"
+                                            Width="*"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <TextBlock Margin="0,6,0,0" FontSize="11" Foreground="#78909C"
+                                           Text="💡 Clique na coluna 'Confrontante' para editar o nome do vizinho manualmente."/>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- ───── Painel de Exportação ──────────────────── -->
+                <Border Grid.Row="1" Background="White" BorderBrush="#CFD8DC"
+                        BorderThickness="1" CornerRadius="4" Padding="14" Margin="0,8,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Style="{StaticResource SecaoHeader}"
+                                       Text="③ Exportar" Margin="0,0,0,6"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <CheckBox x:Name="ChkDocx" Content=".docx (Word)" IsChecked="True"
+                                          Margin="0,0,20,0" VerticalContentAlignment="Center"/>
+                                <CheckBox x:Name="ChkXlsx" Content=".xlsx (Excel)" IsChecked="True"
+                                          VerticalContentAlignment="Center"/>
+                            </StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="TxtPastaDestino" IsReadOnly="True"
+                                         Foreground="#546E7A" FontSize="11"
+                                         VerticalContentAlignment="Center"/>
+                                <Button Grid.Column="1" Content="📂 Pasta" Margin="6,0,0,0"
+                                        Style="{StaticResource BtnSecundario}"
+                                        Click="BtnPastaDestino_Click"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <Button Grid.Column="2" Content="⬇ EXPORTAR ARQUIVOS"
+                                Style="{StaticResource BtnPrincipal}"
+                                FontSize="14" Padding="20,14"
+                                VerticalAlignment="Center"
+                                Click="BtnExportar_Click"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</Window>

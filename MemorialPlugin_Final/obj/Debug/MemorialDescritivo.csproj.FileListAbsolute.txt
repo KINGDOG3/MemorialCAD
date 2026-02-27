@@ -1,0 +1,9 @@
+C:\Users\ecunh\Downloads\MemorialDescritivo_v2\MemorialPlugin_Final\obj\Debug\MemorialDescritivo.csproj.AssemblyReference.cache
+C:\Users\ecunh\Downloads\MemorialDescritivo_v2\MemorialPlugin_Final\obj\Debug\wpf\JanelaMemorial.baml
+C:\Users\ecunh\Downloads\MemorialDescritivo_v2\MemorialPlugin_Final\obj\Debug\wpf\JanelaMemorial.g.cs
+C:\Users\ecunh\Downloads\MemorialDescritivo_v2\MemorialPlugin_Final\obj\Debug\MemorialDescritivo_MarkupCompile.cache
+C:\Users\ecunh\Downloads\MemorialDescritivo_v2\MemorialPlugin_Final\obj\Debug\MemorialDescritivo.g.resources
+C:\Users\ecunh\Downloads\MemorialDescritivo_v2\MemorialPlugin_Final\obj\Debug\MemorialDescritivo.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ecunh\Downloads\MemorialDescritivo_v2\MemorialPlugin_Final\obj\Debug\MemorialDescritivo.AssemblyInfoInputs.cache
+C:\Users\ecunh\Downloads\MemorialDescritivo_v2\MemorialPlugin_Final\obj\Debug\MemorialDescritivo.AssemblyInfo.cs
+C:\Users\ecunh\Downloads\MemorialDescritivo_v2\MemorialPlugin_Final\obj\Debug\MemorialDescritivo.csproj.CoreCompileInputs.cache
